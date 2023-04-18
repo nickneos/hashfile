@@ -1,21 +1,23 @@
 import hashlib
 import os.path
+import sys
 
 from tkinter import *
 from tkinter import filedialog
 
 
-def hashfile():
+def hashfile(filename=None):
     '''Prompts for file, and returns checksums'''
 
     # select file
-    while True: 
-        filename = filedialog.askopenfilename(
-                        title="Select file",
-                        filetypes=[("All Files","*.*")]
-                    )
-        if os.path.isfile(filename):
-            break
+    if filename is None:
+        while True: 
+            filename = filedialog.askopenfilename(
+                            title="Select file",
+                            filetypes=[("All Files","*.*")]
+                        )
+            if os.path.isfile(filename):
+                break
 
     # reset text box
     txt_output.config(state=NORMAL)
@@ -54,5 +56,10 @@ open_button.pack(expand=True)
 # for outputting checksums
 txt_output = Text(root, height=10, width=80)
 txt_output.pack(expand=True)
+
+# if filename is passed as argument
+if len(sys.argv) > 1:
+    if os.path.isfile(sys.argv[1]):
+        hashfile(sys.argv[1])
 
 root.mainloop()
