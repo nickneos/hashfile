@@ -6,11 +6,7 @@ from tkinter import *
 from tkinter import filedialog
 
 # list of algorithms to use for hashing
-hash_algorithms = [
-    ("MD5", hashlib.md5()),
-    ("SHA256", hashlib.sha256()),
-    ("SHA512", hashlib.sha512())
-]
+hash_algorithms = ["MD5", "SHA256", "SHA512"]
 
 
 def hashfile(filename=None):
@@ -34,16 +30,22 @@ def hashfile(filename=None):
 
         # loop through hash_algorithms and calculate checksums
         for idx, ha in enumerate(hash_algorithms):
+            if ha == "MD5":
+                hash = hashlib.md5()
+            elif ha == "SHA256":
+                hash = hashlib.sha256()
+            else:
+                hash = hashlib.sha512()
+                
             with open(filename, "rb") as f:
                 # Read and update hash string value in blocks of 4K
                 for byte_block in iter(lambda: f.read(4096),b""):
-                    ha[1].update(byte_block)
-                checksum = ha[1].hexdigest()
+                    hash.update(byte_block)
             
             # show checksum on gui
             entries[idx][1].config(state=NORMAL)
             entries[idx][1].delete(0, END)
-            entries[idx][1].insert(END, checksum)
+            entries[idx][1].insert(END, hash.hexdigest())
             entries[idx][1].config(state="readonly")
 
 
@@ -65,14 +67,14 @@ if __name__ == "__main__":
     entries = []
     for idx, ha in enumerate(hash_algorithms):
         entries.append(
-            (Label(root, text=ha[0]), Entry(root, width=128))
+            (Label(root, text=ha), Entry(root, width=128))
         )
         entries[idx][0].grid(row=idx+1, column=0, sticky=E, pady=2, padx=2)
         entries[idx][1].grid(row=idx+1, column=1, pady=2, padx=2)
 
     # open button
     open_button = Button(root, text='Open File', command=hashfile)
-    open_button.grid(row=len(entries)+1, column=1, sticky=W)
+    open_button.grid(row=len(entries)+1, column=1, sticky=W, pady=2, padx=2)
 
     # if filename is passed as argument
     if len(sys.argv) > 1:
