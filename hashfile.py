@@ -6,7 +6,7 @@ from tkinter import *
 from tkinter import filedialog
 
 # list of algorithms to use for hashing
-hash_algorithms = ["MD5", "SHA256", "SHA512"]
+hash_algorithms = ["MD5", "SHA-1", "SHA-256", "SHA-512"]
 
 
 def hashfile(filename=None):
@@ -32,7 +32,9 @@ def hashfile(filename=None):
         for idx, ha in enumerate(hash_algorithms):
             if ha == "MD5":
                 hash = hashlib.md5()
-            elif ha == "SHA256":
+            elif ha == "SHA-1":
+                hash = hashlib.sha1()
+            elif ha == "SHA-256":
                 hash = hashlib.sha256()
             else:
                 hash = hashlib.sha512()
@@ -74,7 +76,7 @@ if __name__ == "__main__":
 
     # open button
     open_button = Button(root, text='Open File', command=hashfile)
-    open_button.grid(row=len(entries)+1, column=1, sticky=W, pady=2, padx=2)
+    open_button.grid(row=0, column=2, sticky=W, pady=2, padx=2)
 
     # if filename is passed as argument
     if len(sys.argv) > 1:
