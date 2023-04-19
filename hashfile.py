@@ -58,7 +58,7 @@ def search_cb(var, index, mode):
         if s.get().strip() == entry[1].get().strip():
             entry[1].config(fg="blue")
         else:
-            entry[1].config(fg="SystemWindowText")
+            entry[1].config(fg="black")
 
 
 if __name__ == "__main__":
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     for idx, ha in enumerate(hash_algorithms):
         entries.append((
             Label(top_frame, text=ha),
-            Entry(top_frame, width=128)
+            Entry(top_frame, width=128, fg="black")
         ))
         entries[idx][0].grid(row=idx+1, column=0, sticky=E, pady=2, padx=2)
         entries[idx][1].grid(row=idx+1, column=1, pady=2, padx=2)
