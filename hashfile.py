@@ -56,11 +56,13 @@ def hashfile(filename=None):
 def search_cb(var, index, mode):
     '''Callback function for the search box'''
     for entry in entries:
-        # if search value mataches entry
-        if s.get().strip() == entry.get().strip():
-            entry.config(fg="blue")
-        else:
-            entry.config(fg="black")
+        # ignore empty string
+        if entry.get().strip() != "":
+            # if search value mataches entry
+            if s.get().strip() == entry.get().strip():
+                entry.config(fg="blue")
+            else:
+                entry.config(fg="black")
 
 
 def clear_search():
