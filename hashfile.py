@@ -1,7 +1,7 @@
 import hashlib
-import os.path
 import sys
 
+from pathlib import Path
 from tkinter import *
 from tkinter import filedialog
 
@@ -9,7 +9,8 @@ from tkinter import filedialog
 hash_algorithms = ["MD5", "SHA-1", "SHA-256", "SHA-512"]
 # count of algorithms
 hash_count = len(hash_algorithms)
-
+# directories
+bundle_dir = getattr(sys, '_MEIPASS', Path(__file__).parent.resolve())
 
 def hashfile(filename=None):
     '''Prompts for file, and returns checksums'''
@@ -20,12 +21,12 @@ def hashfile(filename=None):
             filetypes=[("All Files", "*.*")]
         )
     # make sure valid file
-    if os.path.isfile(filename):
+    if Path(filename).is_file():
 
         # show filename on gui
         e1.config(state=NORMAL)
         e1.delete(0, END)
-        e1.insert(END, filename)
+        e1.insert(END, str(Path(filename).resolve()))
         e1.config(state="readonly")
 
         # loop through hash_algorithms and calculate checksums
@@ -68,6 +69,11 @@ if __name__ == "__main__":
     root.title("hashfile by NN")
     root.resizable(False, False)
 
+    # icon
+    icon = Path(bundle_dir, "icon/icon.png")
+    p1 = PhotoImage(file=icon)
+    root.iconphoto(True, p1)
+
     # frames
     top_frame = Frame(root)
     top_frame.grid(row=0,  column=0,  padx=10,  pady=5)
@@ -106,7 +112,7 @@ if __name__ == "__main__":
 
     # if filename is passed as argument
     if len(sys.argv) > 1:
-        if os.path.isfile(sys.argv[1]):
+        if Path(sys.argv[1]).is_file():
             hashfile(sys.argv[1])
 
     root.mainloop()
