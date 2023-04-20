@@ -5,12 +5,13 @@ from pathlib import Path
 from tkinter import *
 from tkinter import filedialog
 
-# list of algorithms to use for hashing
-hash_algorithms = ["MD5", "SHA-1", "SHA-256", "SHA-512"]
+# list of cryptographic hash functions to use
+CHF = ["MD5", "SHA-1", "SHA-256", "SHA-512"]
 # count of algorithms
-hash_count = len(hash_algorithms)
+CHF_COUNT = len(CHF)
 # directories
-bundle_dir = getattr(sys, '_MEIPASS', Path(__file__).parent.resolve())
+ROOTDIR = getattr(sys, '_MEIPASS', Path(__file__).parent.resolve())
+
 
 def hashfile(filename=None):
     '''Prompts for file, and returns checksums'''
@@ -23,19 +24,19 @@ def hashfile(filename=None):
     # make sure valid file
     if Path(filename).is_file():
 
-        # show filename on gui
+        # show filename in gui
         e1.config(state=NORMAL)
         e1.delete(0, END)
         e1.insert(END, str(Path(filename).resolve()))
         e1.config(state="readonly")
 
-        # loop through hash_algorithms and calculate checksums
-        for idx, ha in enumerate(hash_algorithms):
-            if ha == "MD5":
+        # loop through CHF's and calculate checksums
+        for idx, hf in enumerate(CHF):
+            if hf == "MD5":
                 hash = hashlib.md5()
-            elif ha == "SHA-1":
+            elif hf == "SHA-1":
                 hash = hashlib.sha1()
-            elif ha == "SHA-256":
+            elif hf == "SHA-256":
                 hash = hashlib.sha256()
             else:
                 hash = hashlib.sha512()
@@ -46,31 +47,31 @@ def hashfile(filename=None):
                     hash.update(byte_block)
 
             # show checksum on gui
-            entries[idx][1].config(state=NORMAL)
-            entries[idx][1].delete(0, END)
-            entries[idx][1].insert(END, hash.hexdigest())
-            entries[idx][1].config(state="readonly")
+            entries[idx].config(state=NORMAL)
+            entries[idx].delete(0, END)
+            entries[idx].insert(END, hash.hexdigest())
+            entries[idx].config(state="readonly")
 
 
 def search_cb(var, index, mode):
     '''Callback function for the search box'''
     for entry in entries:
         # if search value mataches entry
-        if s.get().strip() == entry[1].get().strip():
-            entry[1].config(fg="blue")
+        if s.get().strip() == entry.get().strip():
+            entry.config(fg="blue")
         else:
-            entry[1].config(fg="black")
+            entry.config(fg="black")
 
 
 if __name__ == "__main__":
 
     # create root window
     root = Tk()
-    root.title("hashfile by NN")
+    root.title("HashFile")
     root.resizable(False, False)
 
     # icon
-    icon = Path(bundle_dir, "icon/icon.png")
+    icon = Path(ROOTDIR, "icon/icon.png")
     p1 = PhotoImage(file=icon)
     root.iconphoto(True, p1)
 
@@ -88,21 +89,20 @@ if __name__ == "__main__":
 
     # checksum fields
     entries = []
-    for idx, ha in enumerate(hash_algorithms):
-        entries.append((
-            Label(top_frame, text=ha),
-            Entry(top_frame, width=128, fg="black")
-        ))
-        entries[idx][0].grid(row=idx+1, column=0, sticky=E, pady=2, padx=2)
-        entries[idx][1].grid(row=idx+1, column=1, pady=2, padx=2)
+    for idx, hf in enumerate(CHF):
+        l = Label(top_frame, text=hf)
+        e = Entry(top_frame, width=128, fg="black")
+        l.grid(row=idx+1, column=0, sticky=E, pady=2, padx=2)
+        e.grid(row=idx+1, column=1, pady=2, padx=2)
+        entries.append(e)
 
     # search bar
     s = StringVar()
     s.trace_add(mode="write", callback=search_cb)
     l2 = Label(top_frame, text="Search")
     e2 = Entry(top_frame, width=128, textvariable=s)
-    l2.grid(row=hash_count+1, column=0, sticky=E, pady=2, padx=2)
-    e2.grid(row=hash_count+1, column=1, pady=2, padx=2)
+    l2.grid(row=CHF_COUNT+1, column=0, sticky=E, pady=2, padx=2)
+    e2.grid(row=CHF_COUNT+1, column=1, pady=2, padx=2)
 
     # buttons
     btn1 = Button(bottom_frame, text='Open File', command=hashfile)
