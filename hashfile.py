@@ -63,6 +63,11 @@ def search_cb(var, index, mode):
             entry.config(fg="black")
 
 
+def clear_search():
+    '''Clear search box'''
+    e2.delete(0, END)
+
+
 if __name__ == "__main__":
 
     # create root window
@@ -107,8 +112,10 @@ if __name__ == "__main__":
     # buttons
     btn1 = Button(bottom_frame, text='Open File', command=hashfile)
     btn1.grid(row=0, column=0, pady=2, padx=2)
-    btn2 = Button(bottom_frame, text='Exit', command=root.destroy)
+    btn2 = Button(bottom_frame, text='Clear Search', command=clear_search)
     btn2.grid(row=0, column=1, pady=2, padx=2)
+    btn3 = Button(bottom_frame, text='Exit', command=root.destroy)
+    btn3.grid(row=0, column=2, pady=2, padx=2)
 
     # if filename is passed as argument
     if len(sys.argv) > 1:
